@@ -20,19 +20,43 @@ export function TagSelector({ tags, onTagsChange, existingTags = [] }: TagSelect
     const [inputValue, setInputValue] = useState("")
     const [tagColor, setTagColor] = useState("#000000")
     const [searchResults, setSearchResults] = useState<Tag[]>([])
+    const [allTags, setAllTags] = useState<Tag[]>(existingTags)
+    const [isLoading, setIsLoading] = useState(false)
     const inputRef = useRef<HTMLInputElement>(null)
+
+    // Fetch all tags when component mounts
+    useEffect(() => {
+        const fetchTags = async () => {
+            if (existingTags.length === 0) {
+                setIsLoading(true)
+                try {
+                    const response = await fetch('/api/tags')
+                    if (response.ok) {
+                        const data = await response.json()
+                        setAllTags(data.tags)
+                    }
+                } catch (error) {
+                    console.error("Error fetching tags:", error)
+                } finally {
+                    setIsLoading(false)
+                }
+            }
+        }
+
+        fetchTags()
+    }, [existingTags])
 
     useEffect(() => {
         if (inputValue.trim() === "") {
-            setSearchResults(existingTags)
+            setSearchResults(allTags)
         } else {
             setSearchResults(
-                existingTags.filter(tag =>
+                allTags.filter(tag =>
                     tag.name.toLowerCase().includes(inputValue.toLowerCase())
                 )
             )
         }
-    }, [inputValue, existingTags])
+    }, [inputValue, allTags])
 
     const handleAddTag = (tag?: Tag) => {
         if (tag) {
@@ -87,49 +111,57 @@ export function TagSelector({ tags, onTagsChange, existingTags = [] }: TagSelect
                                 ref={inputRef}
                             />
                             <CommandList className="bg-card max-h-[300px]">
-                                <CommandEmpty>
-                                    <div className="p-2 bg-card">
-                                        <div className="text-sm">Create new tag:</div>
-                                        <div className="flex mt-2 space-x-2">
-                                            <Input
-                                                type="color"
-                                                value={tagColor}
-                                                onChange={(e) => setTagColor(e.target.value)}
-                                                className="w-10 p-1 h-10"
-                                            />
-                                            <Button
-                                                onClick={() => handleAddTag()}
-                                                className="flex-1"
-                                            >
-                                                Create "{inputValue}"
-                                            </Button>
-                                        </div>
+                                {isLoading ? (
+                                    <div className="p-4 text-center text-sm text-muted-foreground">
+                                        Loading tags...
                                     </div>
-                                </CommandEmpty>
+                                ) : (
+                                    <>
+                                        <CommandEmpty>
+                                            <div className="p-2 bg-card">
+                                                <div className="text-sm">Create new tag:</div>
+                                                <div className="flex mt-2 space-x-2">
+                                                    <Input
+                                                        type="color"
+                                                        value={tagColor}
+                                                        onChange={(e) => setTagColor(e.target.value)}
+                                                        className="w-10 p-1 h-10"
+                                                    />
+                                                    <Button
+                                                        onClick={() => handleAddTag()}
+                                                        className="flex-1"
+                                                    >
+                                                        Create "{inputValue}"
+                                                    </Button>
+                                                </div>
+                                            </div>
+                                        </CommandEmpty>
 
-                                {searchResults.length > 0 && (
-                                    <CommandGroup heading="Existing Tags" className="bg-card">
-                                        {searchResults.map(tag => (
-                                            <CommandItem
-                                                key={tag.id}
-                                                onSelect={() => {
-                                                    handleAddTag(tag)
-                                                    setOpen(false)
-                                                }}
-                                                className="flex items-center gap-2 hover:bg-accent"
-                                            >
-                                                <div
-                                                    className="w-3 h-3 rounded-full"
-                                                    style={{ backgroundColor: tag.color }}
-                                                />
-                                                <span>{tag.name}</span>
-                                                <Check
-                                                    className={`ml-auto h-4 w-4 ${tags.some(t => t.id === tag.id) ? "opacity-100" : "opacity-0"
-                                                        }`}
-                                                />
-                                            </CommandItem>
-                                        ))}
-                                    </CommandGroup>
+                                        {searchResults.length > 0 && (
+                                            <CommandGroup heading="Existing Tags" className="bg-card">
+                                                {searchResults.map(tag => (
+                                                    <CommandItem
+                                                        key={tag.id}
+                                                        onSelect={() => {
+                                                            handleAddTag(tag)
+                                                            setOpen(false)
+                                                        }}
+                                                        className="flex items-center gap-2 hover:bg-accent"
+                                                    >
+                                                        <div
+                                                            className="w-3 h-3 rounded-full"
+                                                            style={{ backgroundColor: tag.color }}
+                                                        />
+                                                        <span>{tag.name}</span>
+                                                        <Check
+                                                            className={`ml-auto h-4 w-4 ${tags.some(t => t.id === tag.id) ? "opacity-100" : "opacity-0"
+                                                                }`}
+                                                        />
+                                                    </CommandItem>
+                                                ))}
+                                            </CommandGroup>
+                                        )}
+                                    </>
                                 )}
                             </CommandList>
                         </Command>
