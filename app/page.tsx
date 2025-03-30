@@ -18,14 +18,27 @@ export default async function ChatBoardPage() {
                         boards={boards}
                     />
                 </TabsContent>
-                
+
                 <TabsContent value="chat" className="flex-1 overflow-hidden p-2">
-                    <Chat boards={boards}/>
+                    <Chat boards={boards} />
                 </TabsContent>
 
                 <TabsList className="grid w-full grid-cols-2">
-                    <TabsTrigger value="boards">Tableros</TabsTrigger>
-                    <TabsTrigger value="chat">Chat</TabsTrigger>
+                    <TabsTrigger value="boards" className="flex items-center justify-center">
+                        <svg className="w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <rect width="7" height="7" x="3" y="3" rx="1" />
+                            <rect width="7" height="7" x="14" y="3" rx="1" />
+                            <rect width="7" height="7" x="14" y="14" rx="1" />
+                            <rect width="7" height="7" x="3" y="14" rx="1" />
+                        </svg>
+                        <span>Tableros</span>
+                    </TabsTrigger>
+                    <TabsTrigger value="chat" className="flex items-center justify-center">
+                        <svg className="w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+                        </svg>
+                        <span>Chat</span>
+                    </TabsTrigger>
                 </TabsList>
             </Tabs>
         </div>
