@@ -11,7 +11,7 @@ export default async function ChatBoardPage() {
     const { boards } = await data.json()
 
     return (
-        <div className="h-screen w-full flex flex-col">
+        <div className="h-screen w-full flex flex-col bg-background text-foreground">
             <Tabs defaultValue="boards" className="flex flex-col h-full">
 
                 <TabsContent value="boards" className="flex-1 p-1 overflow-hidden">
@@ -27,7 +27,7 @@ export default async function ChatBoardPage() {
                     <Chat boards={boards} />
                 </TabsContent>
 
-                <TabsList className="grid w-full grid-cols-2 shadow-md text-black">
+                <TabsList className="grid w-full grid-cols-2 shadow-md bg-muted">
                     <TabsTrigger value="boards" className="flex items-center justify-center">
                         <svg className="w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                             <rect width="7" height="7" x="3" y="3" rx="1" />
