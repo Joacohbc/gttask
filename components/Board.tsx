@@ -13,7 +13,7 @@ export function Board({ id, title, tasks }: BoardType) {
     return (
         <div className="h-full w-full rounded-lg border shadow-sm p-4 bg-background flex flex-col">
             <div className="flex justify-between items-center mb-4">
-                <h3 className="text-lg font-semibold">{title}</h3>
+                <h3 className="text-xl font-semibold">{title}</h3>
                 <Button 
                     variant="ghost" 
                     size="icon" 
@@ -23,18 +23,18 @@ export function Board({ id, title, tasks }: BoardType) {
                 </Button>
             </div>
             
-            <ScrollArea className="flex-1 pr-3 w-full">
-                <div className="pb-2">
-                    {tasks && tasks.length > 0 ? (
-                        tasks.map((task: TaskType) => (
+            <ScrollArea className="flex-1 w-full pr-3 min-h-[calc(78vh)] max-h-[calc(100%-3rem)]">
+                {tasks && tasks.length > 0 ? (
+                    <div className="pb-4">
+                        {tasks.map((task: TaskType) => (
                             <Task key={task.id} {...task} />
-                        ))
-                    ) : (
-                        <div className="text-center py-4 text-muted-foreground">
-                            No hay tareas en este tablero
-                        </div>
-                    )}
-                </div>
+                        ))}
+                    </div>
+                ) : (
+                    <div className="flex items-center justify-center w-full text-muted-foreground">
+                        No hay tareas en este tablero
+                    </div>
+                )}
             </ScrollArea>
         </div>
     )
