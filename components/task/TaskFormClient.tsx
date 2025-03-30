@@ -3,14 +3,14 @@
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { format } from "date-fns"
-import { Calendar as CalendarIcon } from "lucide-react"
+import { Calendar as CalendarIcon, Check, ChevronsUpDown } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Calendar } from "@/components/ui/calendar"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from "@/components/ui/command"
 import { cn } from "@/lib/utils"
 import { Board, Task, TaskStatus, TaskPriority, ALL_TASK_STATUSES, ALL_TASK_PRIORITIES, Tag } from "@/types/index"
 import { TagSelector } from "@/components/task/TagSelector"
@@ -48,6 +48,11 @@ export function TaskFormClient({
     const [parentId, setParentId] = useState("")
     const [tags, setTags] = useState<Tag[]>([])
     const [isSubmitting, setIsSubmitting] = useState(false)
+    
+    // State for combobox open/closed
+    const [boardOpen, setBoardOpen] = useState(false)
+    const [statusOpen, setStatusOpen] = useState(false)
+    const [priorityOpen, setPriorityOpen] = useState(false)
 
     // Initialize form with default board if available
     useEffect(() => {
@@ -142,18 +147,45 @@ export function TaskFormClient({
                     <form onSubmit={handleSubmit} className="space-y-4">
                         <div>
                             <label className="block mb-1">Board</label>
-                            <Select value={boardId} defaultValue={initialData?.boardId} onValueChange={setBoardId}>
-                                <SelectTrigger>
-                                    <SelectValue placeholder="Select board" />
-                                </SelectTrigger>
-                                <SelectContent className="bg-black">
-                                    {boards.map((board) => (
-                                        <SelectItem key={board.id} value={board.id}>
-                                            {board.title}
-                                        </SelectItem>
-                                    ))}
-                                </SelectContent>
-                            </Select>
+                            <Popover open={boardOpen} onOpenChange={setBoardOpen}>
+                                <PopoverTrigger asChild>
+                                    <Button
+                                        variant="outline"
+                                        role="combobox"
+                                        aria-expanded={boardOpen}
+                                        className="w-full justify-between"
+                                    >
+                                        {boardId ? boards.find((board) => board.id === boardId)?.title : "Select board"}
+                                        <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                                    </Button>
+                                </PopoverTrigger>
+                                <PopoverContent className="w-full p-0 bg-black">
+                                    <Command>
+                                        <CommandInput placeholder="Search board..." />
+                                        <CommandEmpty>No board found.</CommandEmpty>
+                                        <CommandGroup>
+                                            {boards.map((board) => (
+                                                <CommandItem
+                                                    key={board.id}
+                                                    value={board.id}
+                                                    onSelect={(currentValue) => {
+                                                        setBoardId(currentValue)
+                                                        setBoardOpen(false)
+                                                    }}
+                                                >
+                                                    <Check
+                                                        className={cn(
+                                                            "mr-2 h-4 w-4",
+                                                            boardId === board.id ? "opacity-100" : "opacity-0"
+                                                        )}
+                                                    />
+                                                    {board.title}
+                                                </CommandItem>
+                                            ))}
+                                        </CommandGroup>
+                                    </Command>
+                                </PopoverContent>
+                            </Popover>
                         </div>
 
                         <div>
@@ -177,34 +209,88 @@ export function TaskFormClient({
                         <div className="grid grid-cols-2 gap-4">
                             <div>
                                 <label className="block mb-1">Status</label>
-                                <Select value={status} onValueChange={(value) => setStatus(value as TaskStatus)}>
-                                    <SelectTrigger className="w-full">
-                                        <SelectValue placeholder="Select status" />
-                                    </SelectTrigger>
-                                    <SelectContent className="bg-black">
-                                        {ALL_TASK_STATUSES.map((statusOption) => (
-                                            <SelectItem key={statusOption} value={statusOption}>
-                                                {statusOption.charAt(0).toUpperCase() + statusOption.slice(1).replace(/-/g, ' ')}
-                                            </SelectItem>
-                                        ))}
-                                    </SelectContent>
-                                </Select>
+                                <Popover open={statusOpen} onOpenChange={setStatusOpen}>
+                                    <PopoverTrigger asChild>
+                                        <Button
+                                            variant="outline"
+                                            role="combobox"
+                                            aria-expanded={statusOpen}
+                                            className="w-full justify-between"
+                                        >
+                                            {status ? status.charAt(0).toUpperCase() + status.slice(1).replace(/-/g, ' ') : "Select status"}
+                                            <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                                        </Button>
+                                    </PopoverTrigger>
+                                    <PopoverContent className="w-full p-0 bg-black">
+                                        <Command>
+                                            <CommandInput placeholder="Search status..." />
+                                            <CommandEmpty>No status found.</CommandEmpty>
+                                            <CommandGroup>
+                                                {ALL_TASK_STATUSES.map((statusOption) => (
+                                                    <CommandItem
+                                                        key={statusOption}
+                                                        value={statusOption}
+                                                        onSelect={(currentValue) => {
+                                                            setStatus(currentValue as TaskStatus)
+                                                            setStatusOpen(false)
+                                                        }}
+                                                    >
+                                                        <Check
+                                                            className={cn(
+                                                                "mr-2 h-4 w-4",
+                                                                status === statusOption ? "opacity-100" : "opacity-0"
+                                                            )}
+                                                        />
+                                                        {statusOption.charAt(0).toUpperCase() + statusOption.slice(1).replace(/-/g, ' ')}
+                                                    </CommandItem>
+                                                ))}
+                                            </CommandGroup>
+                                        </Command>
+                                    </PopoverContent>
+                                </Popover>
                             </div>
 
                             <div>
                                 <label className="block mb-1">Priority</label>
-                                <Select value={priority} onValueChange={(value) => setPriority(value as TaskPriority)}>
-                                    <SelectTrigger className="w-full">
-                                        <SelectValue placeholder="Select priority" />
-                                    </SelectTrigger>
-                                    <SelectContent className="bg-black">
-                                        {ALL_TASK_PRIORITIES.map((priorityOption) => (
-                                            <SelectItem key={priorityOption} value={priorityOption}>
-                                                {priorityOption.charAt(0).toUpperCase() + priorityOption.slice(1)}
-                                            </SelectItem>
-                                        ))}
-                                    </SelectContent>
-                                </Select>
+                                <Popover open={priorityOpen} onOpenChange={setPriorityOpen}>
+                                    <PopoverTrigger asChild>
+                                        <Button
+                                            variant="outline"
+                                            role="combobox"
+                                            aria-expanded={priorityOpen}
+                                            className="w-full justify-between"
+                                        >
+                                            {priority ? priority.charAt(0).toUpperCase() + priority.slice(1) : "Select priority"}
+                                            <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                                        </Button>
+                                    </PopoverTrigger>
+                                    <PopoverContent className="w-full p-0 bg-black">
+                                        <Command>
+                                            <CommandInput placeholder="Search priority..." />
+                                            <CommandEmpty>No priority found.</CommandEmpty>
+                                            <CommandGroup>
+                                                {ALL_TASK_PRIORITIES.map((priorityOption) => (
+                                                    <CommandItem
+                                                        key={priorityOption}
+                                                        value={priorityOption}
+                                                        onSelect={(currentValue) => {
+                                                            setPriority(currentValue as TaskPriority)
+                                                            setPriorityOpen(false)
+                                                        }}
+                                                    >
+                                                        <Check
+                                                            className={cn(
+                                                                "mr-2 h-4 w-4",
+                                                                priority === priorityOption ? "opacity-100" : "opacity-0"
+                                                            )}
+                                                        />
+                                                        {priorityOption.charAt(0).toUpperCase() + priorityOption.slice(1)}
+                                                    </CommandItem>
+                                                ))}
+                                            </CommandGroup>
+                                        </Command>
+                                    </PopoverContent>
+                                </Popover>
                             </div>
                         </div>
 
