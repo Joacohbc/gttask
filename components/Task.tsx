@@ -124,7 +124,7 @@ export function Task({ id, title, description, status, priority, boardId }: Task
     }, [isClicked]);
 
     const handleDelete = async () => {
-        if (confirm("¿Estás seguro de que quieres eliminar esta tarea?")) {
+        if (confirm("Are you sure you want to delete this task?")) {
             setIsDeleting(true)
             try {
                 const response = await fetch(`/api/tasks/${id}`, {
@@ -134,10 +134,10 @@ export function Task({ id, title, description, status, priority, boardId }: Task
                 if (response.ok) {
                     router.refresh()
                 } else {
-                    console.error('Error al eliminar la tarea')
+                    console.error('Error deleting task')
                 }
             } catch (error) {
-                console.error('Error de red:', error)
+                console.error('Network error:', error)
             } finally {
                 setIsDeleting(false)
                 setIsHolding(false)
@@ -163,10 +163,10 @@ export function Task({ id, title, description, status, priority, boardId }: Task
             if (response.ok) {
                 router.refresh()
             } else {
-                console.error('Error al mover la tarea')
+                console.error('Error moving task')
             }
         } catch (error) {
-            console.error('Error de red:', error)
+            console.error('Network error:', error)
         } finally {
             setIsMoving(false)
         }
@@ -187,10 +187,10 @@ export function Task({ id, title, description, status, priority, boardId }: Task
             if (response.ok) {
                 router.refresh()
             } else {
-                console.error('Error al cambiar el estado de la tarea')
+                console.error('Error changing task status')
             }
         } catch (error) {
-            console.error('Error de red:', error)
+            console.error('Network error:', error)
         }
     }
 
@@ -275,7 +275,7 @@ export function Task({ id, title, description, status, priority, boardId }: Task
                                         <EyeOpenIcon className="h-4 w-4" />
                                     </Button>
                                 </TooltipTrigger>
-                                <TooltipContent>Ver detalles</TooltipContent>
+                                <TooltipContent>View details</TooltipContent>
                             </Tooltip>
                         </TooltipProvider>
                         
@@ -294,7 +294,7 @@ export function Task({ id, title, description, status, priority, boardId }: Task
                                         <Pencil1Icon className="h-4 w-4" />
                                     </Button>
                                 </TooltipTrigger>
-                                <TooltipContent>Editar tarea</TooltipContent>
+                                <TooltipContent>Edit task</TooltipContent>
                             </Tooltip>
                         </TooltipProvider>
                         
@@ -314,7 +314,7 @@ export function Task({ id, title, description, status, priority, boardId }: Task
                                         <TrashIcon className="h-4 w-4" />
                                     </Button>
                                 </TooltipTrigger>
-                                <TooltipContent>Eliminar tarea</TooltipContent>
+                                <TooltipContent>Delete task</TooltipContent>
                             </Tooltip>
                         </TooltipProvider>
                     </div>

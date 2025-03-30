@@ -21,8 +21,8 @@ export function Project({ title, boards }: ProjectProps) {
             <Carousel className="w-full h-[calc(100vh-200px)]">
                 <CarouselContent className="h-full">
                     {boards.map((board) => (
-                        <CarouselItem key={board.id} className="md:basis-1/2 lg:basis-1/3">
-                            <div className="p-1 flex-1">
+                        <CarouselItem key={board.id} className="h-full w-full">
+                            <div className="p-1 h-full">
                                 <Board
                                     id={board.id}
                                     title={board.title}

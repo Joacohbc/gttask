@@ -32,7 +32,7 @@ export function Board({ id, title, tasks }: BoardType) {
                     </div>
                 ) : (
                     <div className="flex items-center justify-center w-full text-muted-foreground">
-                        No hay tareas en este tablero
+                        No tasks in this board
                     </div>
                 )}
             </ScrollArea>

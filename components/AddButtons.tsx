@@ -25,7 +25,7 @@ export function AddButtons() {
             </DrawerTrigger>
             <DrawerContent>
                 <DrawerHeader className="text-center">
-                    <DrawerTitle>Agregar</DrawerTitle>
+                    <DrawerTitle>Add</DrawerTitle>
                 </DrawerHeader>
                 <div className="flex flex-col space-y-4 p-4 items-center">
                     <Button className="w-full" onClick={() => {
@@ -33,14 +33,14 @@ export function AddButtons() {
                         setOpen(false)
                     }}>
                         <PlusIcon className="h-4 w-4 mr-2" />
-                        Nuevo Tablero
+                        New Board
                     </Button>
                     <Button className="w-full" onClick={() => {
                         router.push('/tasks/add')
                         setOpen(false)
                     }}>
                         <PlusIcon className="h-4 w-4 mr-2" />
-                        Nueva Tarea
+                        New Task
                     </Button>
                 </div>
             </DrawerContent>
