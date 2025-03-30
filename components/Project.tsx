@@ -18,8 +18,8 @@ export function Project({ title, boards }: ProjectProps) {
     return (
         <div className="flex flex-col h-full">
             <h1 className="text-2xl font-bold text-center mb-2">{title}</h1>
-            <ScrollArea className="flex-1 w-full whitespace-nowrap rounded-md border">
-                <div className="flex w-max space-x-4 p-4">
+            <ScrollArea className="flex-1 w-full rounded-md border">
+                <div className="flex w-max space-x-4 p-4 h-[calc(100vh-180px)]">
                     {boards.map((board) => (
                         <Board
                             key={board.id}

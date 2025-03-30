@@ -10,16 +10,16 @@ export default async function ChatBoardPage() {
     const { boards } = await data.json()
 
     return (
-        <div className="h-screen w-full flex flex-col overflow-hidden">
+        <div className="h-screen w-full flex flex-col">
             <Tabs defaultValue="boards" className="flex flex-col h-full">
-                <TabsContent value="boards" className="flex-1 overflow-hidden p-2">
+                <TabsContent value="boards" className="flex-1 p-2">
                     <Project
                         title="Project Management App"
                         boards={boards}
                     />
                 </TabsContent>
 
-                <TabsContent value="chat" className="flex-1 overflow-hidden p-2">
+                <TabsContent value="chat" className="flex-1 p-2">
                     <Chat boards={boards} />
                 </TabsContent>
 
