@@ -146,7 +146,7 @@ export default function Chat( { boards }: ChatProps) {
     }
 
     return (
-        <Card className="flex-1 p-4 overflow-hidden flex flex-col">
+        <Card className="flex-1 p-4 overflow-hidden flex flex-col h-full">
             <h1 className="text-2xl font-bold mb-4 text-center">Chat with AI</h1>
 
             <ScrollArea className="flex-1 p-4">

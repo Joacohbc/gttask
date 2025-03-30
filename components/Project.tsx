@@ -11,9 +11,9 @@ interface ProjectProps {
 
 export function Project({ title, boards }: ProjectProps) {
     return (
-        <div className="space-y-4">
-            <h1 className="text-2xl font-bold">{title}</h1>
-            <ScrollArea className="w-full whitespace-nowrap rounded-md border">
+        <div className="flex flex-col h-full">
+            <h1 className="text-2xl font-bold mb-4 text-center">{title}</h1>
+            <ScrollArea className="flex-1 w-full whitespace-nowrap rounded-md border">
                 <div className="flex w-max space-x-4 p-4">
                     {boards.map((board) => (
                         <Board
@@ -25,6 +25,7 @@ export function Project({ title, boards }: ProjectProps) {
                     ))}
                 </div>
                 <ScrollBar orientation="horizontal" />
+                <ScrollBar orientation="vertical" />
             </ScrollArea>
         </div>
     )
