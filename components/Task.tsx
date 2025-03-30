@@ -269,7 +269,7 @@ export function Task({ id, title, description, status, priority, boardId }: Task
                                         size="sm" 
                                         onClick={(e) => {
                                             e.stopPropagation();
-                                            router.push(`/tasks/${id}`);
+                                            router.push(`/tasks/view/${id}`);
                                         }}
                                     >
                                         <EyeOpenIcon className="h-4 w-4" />

@@ -21,6 +21,7 @@ export async function GET(request: Request, { params }: { params: { id: string }
 
         return NextResponse.json({ task })
     } catch (error) {
+        console.log("Error fetching task:", error);
         return NextResponse.json({ error: 'Error fetching task' }, { status: 500 })
     }
 }
