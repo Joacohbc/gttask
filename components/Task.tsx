@@ -1,48 +1,13 @@
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { ALL_TASK_STATUSES, TaskStatus, Task as TaskType } from "@/types/index"
 import React, { useState, useEffect, useRef } from "react"
 import { useRouter } from "next/navigation"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
-import { ArrowRightIcon, EyeOpenIcon, Pencil1Icon, TrashIcon } from "@radix-ui/react-icons"
+import { EyeOpenIcon, Pencil1Icon, TrashIcon } from "@radix-ui/react-icons"
 import { ScrollArea } from "@/components/ui/scroll-area"
-
-const statusColors = (status: TaskStatus) => {
-    switch (status) {
-        case TaskStatus.TODO:
-            return "bg-blue-500 text-white"
-        case TaskStatus.IN_PROGRESS:
-            return "bg-yellow-500 text-white"
-        case TaskStatus.BLOCKED:
-            return "bg-red-500 text-white"
-        case TaskStatus.ON_HOLD:
-            return "bg-orange-500 text-white"
-        case TaskStatus.REVIEW:
-            return "bg-purple-500 text-white"
-        case TaskStatus.TESTING:
-            return "bg-indigo-500 text-white"
-        case TaskStatus.DONE:
-            return "bg-green-500 text-white"
-        case TaskStatus.ACHIEVED:
-            return "bg-emerald-500 text-white"
-        default:
-            return "bg-gray-500 text-white"
-    }
-}
-
-const priorityColors = (priority: string) => {
-    switch (priority) {
-        case "low":
-            return "bg-green-500 text-white"
-        case "medium":
-            return "bg-yellow-500 text-white"
-        case "high":
-            return "bg-red-500 text-white"
-        default:
-            return "bg-gray-500 text-white"
-    }
-}
+import { getStatusColor, getStatusLabel, TaskStatusBadge } from "./task/TaskStatusBadge"
+import { TaskPriorityBadge } from "./task/TaskPriorityBadge"
 
 export function Task({ id, title, description, status, priority, boardId }: TaskType) {
     const router = useRouter()
@@ -52,8 +17,7 @@ export function Task({ id, title, description, status, priority, boardId }: Task
     const [isHolding, setIsHolding] = useState(false)
     const [isClicked, setIsClicked] = useState(false)
     const holdTimerRef = useRef<NodeJS.Timeout | null>(null)
-    
-    // Cargar los tableros disponibles
+
     useEffect(() => {
         const fetchBoards = async () => {
             try {
@@ -68,11 +32,32 @@ export function Task({ id, title, description, status, priority, boardId }: Task
         fetchBoards()
     }, [])
 
-    // Long press handlers
+    useEffect(() => {
+        return () => {
+            if (holdTimerRef.current) {
+                clearTimeout(holdTimerRef.current)
+            }
+        }
+    }, [])
+
+    useEffect(() => {
+        const handleClickOutside = () => {
+            setIsClicked(false);
+        };
+        
+        if (isClicked) {
+            document.addEventListener('click', handleClickOutside);
+        }
+        
+        return () => {
+            document.removeEventListener('click', handleClickOutside);
+        };
+    }, [isClicked]);
+
     const handlePointerDown = () => {
         holdTimerRef.current = setTimeout(() => {
             setIsHolding(true)
-        }, 500) // 500ms hold time to activate
+        }, 500)
     }
 
     const handlePointerUp = () => {
@@ -89,39 +74,12 @@ export function Task({ id, title, description, status, priority, boardId }: Task
         }
     }
 
-    // Clean up timer on component unmount
-    useEffect(() => {
-        return () => {
-            if (holdTimerRef.current) {
-                clearTimeout(holdTimerRef.current)
-            }
-        }
-    }, [])
-
-    // Click handler for status buttons
     const handleClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-        // Only toggle if not holding (to prevent conflicts with hold action)
         if (!isHolding) {
             setIsClicked(!isClicked);
         }
-        // Prevent the click from triggering other actions
         e.stopPropagation();
     }
-
-    // Close when clicking outside
-    useEffect(() => {
-        const handleClickOutside = () => {
-            setIsClicked(false);
-        };
-        
-        if (isClicked) {
-            document.addEventListener('click', handleClickOutside);
-        }
-        
-        return () => {
-            document.removeEventListener('click', handleClickOutside);
-        };
-    }, [isClicked]);
 
     const handleDelete = async () => {
         if (confirm("Are you sure you want to delete this task?")) {
@@ -209,8 +167,8 @@ export function Task({ id, title, description, status, priority, boardId }: Task
             <CardHeader className="flex flex-col justify-center items-center">
                 <CardTitle className="text-md text-wrap text-center">{title}</CardTitle>
                 <div className="flex gap-1 mt-1">
-                    <Badge variant="outline" className={statusColors(status)}>{status}</Badge>
-                    <Badge variant="outline" className={priorityColors(priority)}>{priority}</Badge>
+                    <TaskStatusBadge status={status} />
+                    <TaskPriorityBadge priority={priority} />
                 </div>
             </CardHeader>
             
@@ -223,14 +181,14 @@ export function Task({ id, title, description, status, priority, boardId }: Task
                                     key={taskStatus}
                                     size="sm" 
                                     variant={status === taskStatus ? "default" : "outline"} 
-                                    className={`text-xs ${statusColors(taskStatus)}`}
+                                    className={`text-xs ${getStatusColor(taskStatus)}`}
                                     onClick={(e) => {
                                         e.stopPropagation();
                                         handleStatusChange(taskStatus);
                                     }}
                                     disabled={status === taskStatus}
                                 >
-                                    {taskStatus}
+                                    {getStatusLabel(taskStatus)}
                                 </Button>
                             ))}
                         </div>
