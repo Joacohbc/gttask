@@ -22,7 +22,7 @@ export function Project({ title, boards }: ProjectProps) {
                 <CarouselContent className="h-full">
                     {boards.map((board) => (
                         <CarouselItem key={board.id} className="md:basis-1/2 lg:basis-1/3">
-                            <div className="p-1">
+                            <div className="p-1 flex-1">
                                 <Board
                                     id={board.id}
                                     title={board.title}

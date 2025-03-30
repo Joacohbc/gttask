@@ -1,28 +1,84 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
   provider = "sqlite"
-  url      = "file:./dev.db"
+  url      = env("DATABASE_URL")
+}
+
+enum TaskStatus {
+  todo
+  in_progress
+  blocked
+  on_hold
+  review
+  testing
+  done
+  achieved
+}
+
+enum TaskPriority {
+  low
+  medium
+  high
 }
 
 model Board {
-  id        String   @id @default(cuid())
+  id        String   @id @default(uuid())
   title     String
-  tasks     Task[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  tasks     Task[]
+}
+
+model Tag {
+  id     String @id @default(uuid())
+  name   String
+  color  String
+  tasks  Task[]
 }
 
 model Task {
-  id          String   @id @default(cuid())
+  id          String       @id @default(uuid())
   title       String
-  description String?
-  status      String   @default("todo")
-  priority    String   @default("medium")
-  board       Board    @relation(fields: [boardId], references: [id], onDelete: Cascade)
+  description String
+  status      TaskStatus   @default(todo)
+  priority    TaskPriority @default(medium)
+  board       Board        @relation(fields: [boardId], references: [id], onDelete: Cascade)
   boardId     String
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  startDate   DateTime     @default(now())
+  dueDate     DateTime?
+  assignee    String?
+  
+  // Tag relationship
+  tags        Tag[]
+  
+  // Comments relationship
+  comments    Comment[]
+  
+  // Subtask relationship
+  parentId    String?
+  parentTask  Task?    @relation("TaskToSubtask", fields: [parentId], references: [id], onDelete: SetNull)
+  subtasks    Task[]   @relation("TaskToSubtask")
+}
+
+model Comment {
+  id        String    @id @default(uuid())
+  content   String
+  userId    String
+  task      Task      @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  taskId    String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  
+  // Comment replies structure
+  parentId  String?
+  parent    Comment?  @relation("CommentToReply", fields: [parentId], references: [id], onDelete: SetNull)
+  replies   Comment[] @relation("CommentToReply")
 }
