@@ -8,10 +8,17 @@ export async function GET(request: Request, { params }: { params: { id: string }
             where: {
                 id: params.id,
             },
+            include: {
+                tags: true,
+                parentTask: true,
+                subtasks: true,
+            }
         })
+        
         if (!task) {
             return NextResponse.json({ error: 'Task not found' }, { status: 404 })
         }
+
         return NextResponse.json({ task })
     } catch (error) {
         return NextResponse.json({ error: 'Error fetching task' }, { status: 500 })
@@ -22,14 +29,44 @@ export async function GET(request: Request, { params }: { params: { id: string }
 export async function PUT(request: Request, { params }: { params: { id: string } }) {
     try {
         const json = await request.json()
+        
+        // Process dates if they exist
+        if (json.startDate && typeof json.startDate === 'string') {
+            json.startDate = new Date(json.startDate)
+        }
+        
+        if (json.dueDate && typeof json.dueDate === 'string') {
+            json.dueDate = new Date(json.dueDate)
+        }
+        
+        // Format tags for Prisma if they exist
+        if (json.tags && Array.isArray(json.tags)) {
+            json.tags = {
+                connectOrCreate: json.tags.map(tag => ({
+                    where: { id: tag.id },
+                    create: {
+                        name: tag.name,
+                        color: tag.color
+                    }
+                }))
+            }
+        }
+        
+        // Handle parent task relationship if needed
+        if (json.parentId === 'N/A' || json.parentId === '') {
+            delete json.parentId
+        }
+        
         const task = await prisma.task.update({
             where: {
                 id: params.id,
             },
             data: json,
         })
+        
         return NextResponse.json({ task })
     } catch (error) {
+        console.error("Error updating task:", error)
         return NextResponse.json({ error: 'Error updating task' }, { status: 500 })
     }
 }
