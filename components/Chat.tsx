@@ -6,7 +6,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { Avatar } from "@/components/ui/avatar"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Card } from "@/components/ui/card"
-import { Message, MessageType } from "@/app/api/chat/types"
+import { Message, MessageType } from "@/types"
 import { Board as BoardType } from "@/types/index"
 import ReactMarkdown from "react-markdown"
 import rehypeSanitize from "rehype-sanitize"
@@ -99,10 +99,11 @@ type ChatProps = {
 }
 
 export default function Chat( { boards }: ChatProps) {
-    const [chatState, dispatch] = useReducer(chatReducer, {
+    const [ chatState, dispatch ] = useReducer(chatReducer, {
         messages: [],
         isLoading: false
     });
+
     const [input, setInput] = useState("")
     const messagesEndRef = useRef<HTMLDivElement>(null)
 
