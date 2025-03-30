@@ -4,7 +4,7 @@ import { Project } from "@/components/Project"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 export default async function ChatBoardPage() {
-    const data = await fetch("http://localhost:3000/api/tasks", {
+    const data = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/tasks`, {
         cache: "no-store",
     })
 

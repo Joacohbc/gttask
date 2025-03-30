@@ -30,7 +30,7 @@ export function TagSelector({ tags, onTagsChange, existingTags = [] }: TagSelect
             if (existingTags.length === 0) {
                 setIsLoading(true)
                 try {
-                    const response = await fetch('/api/tags')
+                    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/tags`)
                     if (response.ok) {
                         const data = await response.json()
                         setAllTags(data.tags)

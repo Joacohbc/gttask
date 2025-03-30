@@ -19,7 +19,7 @@ export default function EditBoardPage({ params }: { params: { id: string } }) {
         const fetchBoard = async () => {
             setIsLoading(true)
             try {
-                const response = await fetch(`/api/boards/${params.id}`)
+                const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/boards/${params.id}`)
                 const data = await response.json()
                 
                 if (data.board) {
@@ -44,7 +44,7 @@ export default function EditBoardPage({ params }: { params: { id: string } }) {
         setIsSubmitting(true)
         
         try {
-            const response = await fetch(`/api/boards/${params.id}`, {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/boards/${params.id}`, {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
@@ -73,7 +73,7 @@ export default function EditBoardPage({ params }: { params: { id: string } }) {
         setIsDeleting(true)
         
         try {
-            const response = await fetch(`/api/boards/${params.id}`, {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/boards/${params.id}`, {
                 method: "DELETE",
             })
             

@@ -11,8 +11,6 @@ import { Board as BoardType } from "@/types/index"
 import ReactMarkdown from "react-markdown"
 import rehypeSanitize from "rehype-sanitize"
 
-const API_URL = "/api/chat"
-
 type ChatFunction = (newMessages: Message[]) => Promise<Message>
 
 // Define the chat state interface
@@ -62,7 +60,7 @@ const chatApi = (initMessage : Message[]): ChatFunction => {
 
     return async (newMessages: Message[]): Promise<Message> => {
         messages.push(...newMessages);
-        const response = await fetch(API_URL, {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/chat`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",

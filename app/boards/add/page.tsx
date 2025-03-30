@@ -19,7 +19,7 @@ export default function AddBoardPage() {
         setIsSubmitting(true)
         
         try {
-            const response = await fetch("/api/boards", {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/boards`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

@@ -6,8 +6,7 @@ import { notFound } from "next/navigation";
 async function getTaskById(id: string): Promise<Task | null> {
     try {
         // Make a real API request to fetch task data
-        const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
-        const response = await fetch(`${baseUrl}/api/tasks/${id}`, {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/tasks/${id}`, {
             next: { revalidate: 60 } // Revalidate cache every minute
         });
         

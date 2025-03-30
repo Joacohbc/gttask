@@ -21,7 +21,7 @@ export function Task({ id, title, description, status, priority, boardId }: Task
     useEffect(() => {
         const fetchBoards = async () => {
             try {
-                const response = await fetch("/api/boards")
+                const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/boards`)
                 const data = await response.json()
                 setBoards(data.boards || [])
             } catch (error) {
@@ -85,7 +85,7 @@ export function Task({ id, title, description, status, priority, boardId }: Task
         if (confirm("Are you sure you want to delete this task?")) {
             setIsDeleting(true)
             try {
-                const response = await fetch(`/api/tasks/${id}`, {
+                const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/tasks/${id}`, {
                     method: 'DELETE',
                 })
                 
@@ -108,7 +108,7 @@ export function Task({ id, title, description, status, priority, boardId }: Task
         
         setIsMoving(true)
         try {
-            const response = await fetch(`/api/tasks/${id}`, {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/tasks/${id}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -132,7 +132,7 @@ export function Task({ id, title, description, status, priority, boardId }: Task
 
     const handleStatusChange = async (newStatus: TaskStatus) => {
         try {
-            const response = await fetch(`/api/tasks/${id}`, {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/tasks/${id}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',

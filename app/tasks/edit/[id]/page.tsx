@@ -1,40 +1,32 @@
-"use client"
-
-import { useState, useEffect } from "react"
 import { TaskForm } from "@/components/task/TaskForm"
 import { Task } from "@/types/index"
 
-export default function EditTaskPage({ params }: { params: { id: string } }) {
-    const [task, setTask] = useState<Task | null>(null)
-    const [isLoading, setIsLoading] = useState(true)
-
-    useEffect(() => {
-        const fetchTask = async () => {
-            setIsLoading(true)
-            try {
-                const response = await fetch(`/api/tasks/${params.id}`)
-                const data = await response.json()
-                
-                if (data.task) {
-                    setTask(data.task)
-                }
-            } catch (error) {
-                console.error("Error fetching task:", error)
-            } finally {
-                setIsLoading(false)
-            }
+// Esta es una función simulada para obtener una tarea por ID
+async function getTaskById(id: string): Promise<Task | null> {
+    try {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/tasks/${id}`, {
+            next: { revalidate: 60 } // Revalidate cache every minute
+        });
+        
+        if (!response.ok) {
+            throw new Error(`Failed to fetch task: ${response.status}`);
         }
         
-        fetchTask()
-    }, [params.id])
-
-    if (isLoading) {
-        return <div className="container p-4">Loading task data...</div>
+        const data = await response.json();
+        return data.task;
+    } catch (error) {
+        console.error("Error fetching task:", error);
+        return null;
     }
+}
 
+export default async function EditTaskPage({ params }: { params: { id: string } }) {
+    const { id } = params;
+    const task = await getTaskById(id);
+    
     if (!task) {
         return <div className="container p-4">Task not found</div>
     }
 
-    return <TaskForm taskId={params.id} initialData={task} />
+    return <TaskForm taskId={id} initialData={task} />
 }
