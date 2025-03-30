@@ -40,9 +40,9 @@ export async function PUT(request: Request, { params }: { params: { id: string }
             json.dueDate = new Date(json.dueDate)
         }
         
-        // Format tags for Prisma if they exist
         if (json.tags && Array.isArray(json.tags)) {
             json.tags = {
+                set: [],
                 connectOrCreate: json.tags.map(tag => ({
                     where: { id: tag.id },
                     create: {

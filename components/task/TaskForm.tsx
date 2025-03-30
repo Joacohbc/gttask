@@ -19,15 +19,15 @@ import { TaskSelector } from "@/components/task/TaskSelector"
 const DATE_FORMAT = "dd/MM/yyyy"
 
 interface TaskFormProps {
-  taskId?: string; // Optional - if present, we're in edit mode
-  initialData?: Task; // Optional - for edit mode, the task data
-  isLoading?: boolean; // Optional - for loading states in edit mode
+    taskId?: string; // Optional - if present, we're in edit mode
+    initialData?: Task; // Optional - for edit mode, the task data
+    isLoading?: boolean; // Optional - for loading states in edit mode
 }
 
 export function TaskForm({ taskId, initialData, isLoading = false }: TaskFormProps) {
     const router = useRouter()
     const isEditMode = !!taskId;
-    
+
     const [title, setTitle] = useState("")
     const [description, setDescription] = useState("")
     const [status, setStatus] = useState<TaskStatus>(TaskStatus.TODO)
@@ -49,19 +49,19 @@ export function TaskForm({ taskId, initialData, isLoading = false }: TaskFormPro
                 const boardsResponse = await fetch("/api/boards")
                 const boardsData = await boardsResponse.json()
                 setBoards(boardsData.boards)
-                
+
                 if (boardsData.boards.length > 0 && !isEditMode) {
                     setBoardId(boardsData.boards[0].id)
                 }
-                
+
                 // Fetch available tasks for parent selection
                 const tasksResponse = await fetch("/api/tasks")
                 const tasksData = await tasksResponse.json()
-                
+
                 // Flatten the tasks from all boards
                 const allTasks = tasksData.boards.flatMap((board: Board) => board.tasks)
                 setAvailableTasks(allTasks)
-                
+
                 // Collect all unique tags from all tasks for the tag selector
                 const allTags = new Map<string, Tag>()
                 allTasks.forEach((task: Task) => {
@@ -76,7 +76,7 @@ export function TaskForm({ taskId, initialData, isLoading = false }: TaskFormPro
                 console.error("Error fetching data:", error)
             }
         }
-        
+
         fetchData()
     }, [isEditMode])
 
@@ -88,19 +88,19 @@ export function TaskForm({ taskId, initialData, isLoading = false }: TaskFormPro
             setStatus(initialData.status)
             setPriority(initialData.priority)
             setBoardId(initialData.boardId)
-            
+
             if (initialData.startDate) {
                 setStartDate(new Date(initialData.startDate))
             }
-            
+
             if (initialData.dueDate) {
                 setDueDate(new Date(initialData.dueDate))
             }
-            
+
             if (initialData.parentId && initialData.parentId !== "N/A") {
                 setParentId(initialData.parentId)
             }
-            
+
             if (initialData.tags) {
                 setTags(initialData.tags)
             }
@@ -109,11 +109,11 @@ export function TaskForm({ taskId, initialData, isLoading = false }: TaskFormPro
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
-        
+
         if (!title || !boardId) return
-        
+
         setIsSubmitting(true)
-        
+
         try {
             const formData = {
                 title,
@@ -122,14 +122,14 @@ export function TaskForm({ taskId, initialData, isLoading = false }: TaskFormPro
                 priority,
                 boardId,
                 tags,
-                parentId: parentId || "N/A",
-                startDate: startDate ? format(startDate, 'yyyy-MM-dd') : "",
-                dueDate: dueDate ? format(dueDate, 'yyyy-MM-dd') : "",
+                parentId: parentId != "N/A" ? parentId : undefined,
+                startDate: startDate ? format(startDate, 'yyyy-MM-dd') : undefined,
+                dueDate: dueDate ? format(dueDate, 'yyyy-MM-dd') : undefined,
             }
-            
+
             const url = isEditMode ? `/api/tasks/${taskId}` : "/api/tasks"
             const method = isEditMode ? "PUT" : "POST"
-            
+
             const response = await fetch(url, {
                 method,
                 headers: {
@@ -137,7 +137,7 @@ export function TaskForm({ taskId, initialData, isLoading = false }: TaskFormPro
                 },
                 body: JSON.stringify(formData),
             })
-            
+
             if (response.ok) {
                 router.push("/")
                 router.refresh()
@@ -179,25 +179,25 @@ export function TaskForm({ taskId, initialData, isLoading = false }: TaskFormPro
                                 </SelectContent>
                             </Select>
                         </div>
-                        
+
                         <div>
                             <label className="block mb-1">Title</label>
-                            <Input 
-                                value={title} 
-                                onChange={(e) => setTitle(e.target.value)} 
-                                required 
+                            <Input
+                                value={title}
+                                onChange={(e) => setTitle(e.target.value)}
+                                required
                             />
                         </div>
-                        
+
                         <div>
                             <label className="block mb-1">Description</label>
-                            <Textarea 
-                                value={description} 
+                            <Textarea
+                                value={description}
                                 onChange={(e) => setDescription(e.target.value)}
                                 rows={3}
                             />
                         </div>
-                        
+
                         <div className="grid grid-cols-2 gap-4">
                             <div>
                                 <label className="block mb-1">Status</label>
@@ -214,7 +214,7 @@ export function TaskForm({ taskId, initialData, isLoading = false }: TaskFormPro
                                     </SelectContent>
                                 </Select>
                             </div>
-                            
+
                             <div>
                                 <label className="block mb-1">Priority</label>
                                 <Select value={priority} onValueChange={(value) => setPriority(value as TaskPriority)}>
@@ -231,7 +231,7 @@ export function TaskForm({ taskId, initialData, isLoading = false }: TaskFormPro
                                 </Select>
                             </div>
                         </div>
-                        
+
                         <div className="grid grid-cols-2 gap-4">
                             <div className="block w-full">
                                 <label className="block mb-1">Start Date</label>
@@ -258,7 +258,7 @@ export function TaskForm({ taskId, initialData, isLoading = false }: TaskFormPro
                                     </PopoverContent>
                                 </Popover>
                             </div>
-                            
+
                             <div className="block w-full">
                                 <label className="block mb-1">Due Date</label>
                                 <Popover>
@@ -285,7 +285,7 @@ export function TaskForm({ taskId, initialData, isLoading = false }: TaskFormPro
                                 </Popover>
                             </div>
                         </div>
-                        
+
                         <div>
                             <label className="block mb-1">Parent Task (optional)</label>
                             <TaskSelector
@@ -296,7 +296,7 @@ export function TaskForm({ taskId, initialData, isLoading = false }: TaskFormPro
                                 placeholder="Select parent task (optional)"
                             />
                         </div>
-                        
+
                         <div>
                             <label className="block mb-1">Tags</label>
                             <TagSelector
@@ -305,7 +305,7 @@ export function TaskForm({ taskId, initialData, isLoading = false }: TaskFormPro
                                 existingTags={availableTags}
                             />
                         </div>
-                        
+
                         <div className="pt-2">
                             <Button type="submit" disabled={isSubmitting} className="w-full">
                                 {isSubmitting ? "Saving..." : isEditMode ? "Update Task" : "Save Task"}
