@@ -14,7 +14,7 @@ export default async function ChatBoardPage() {
             <Tabs defaultValue="boards" className="flex flex-col h-full">
                 <TabsContent value="boards" className="flex-1 overflow-hidden p-2">
                     <Project
-                        title={"Project Management App"}
+                        title="Project Management App"
                         boards={boards}
                     />
                 </TabsContent>
