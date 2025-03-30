@@ -19,11 +19,11 @@ export function AddButtons() {
     return (
         <Drawer open={open} onOpenChange={setOpen}>
             <DrawerTrigger asChild>
-                <Button variant="default" className="rounded-full w-12 h-12 flex items-center justify-center shadow-md">
+                <Button variant="outline" className="rounded-full w-12 h-12 flex items-center justify-center shadow-md">
                     <PlusIcon className="h-6 w-6" />
                 </Button>
             </DrawerTrigger>
-            <DrawerContent className="z-10">
+            <DrawerContent>
                 <DrawerHeader className="text-center">
                     <DrawerTitle>Agregar</DrawerTitle>
                 </DrawerHeader>
