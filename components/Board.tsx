@@ -5,12 +5,13 @@ import { Board as BoardType, Task as TaskType } from "@/types/index"
 import { Button } from "@/components/ui/button"
 import { Pencil1Icon } from "@radix-ui/react-icons"
 import { useRouter } from "next/navigation"
+import { ScrollArea } from "@/components/ui/scroll-area"
 
 export function Board({ id, title, tasks }: BoardType) {
     const router = useRouter()
     
     return (
-        <div className="w-[300px] rounded-lg border shadow-sm p-4 bg-background">
+        <div className="h-full w-full rounded-lg border shadow-sm p-4 bg-background flex flex-col">
             <div className="flex justify-between items-center mb-4">
                 <h3 className="text-lg font-semibold">{title}</h3>
                 <Button 
@@ -22,17 +23,19 @@ export function Board({ id, title, tasks }: BoardType) {
                 </Button>
             </div>
             
-            <div>
-                {tasks && tasks.length > 0 ? (
-                    tasks.map((task: TaskType) => (
-                        <Task key={task.id} {...task} />
-                    ))
-                ) : (
-                    <div className="text-center py-4 text-muted-foreground">
-                        No hay tareas en este tablero
-                    </div>
-                )}
-            </div>
+            <ScrollArea className="flex-1 pr-3 w-full">
+                <div className="pb-2">
+                    {tasks && tasks.length > 0 ? (
+                        tasks.map((task: TaskType) => (
+                            <Task key={task.id} {...task} />
+                        ))
+                    ) : (
+                        <div className="text-center py-4 text-muted-foreground">
+                            No hay tareas en este tablero
+                        </div>
+                    )}
+                </div>
+            </ScrollArea>
         </div>
     )
 }
