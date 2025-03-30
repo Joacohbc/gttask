@@ -1,3 +1,4 @@
+import { AddButtons } from "@/components/AddButtons"
 import Chat from "@/components/Chat"
 import { Project } from "@/components/Project"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
@@ -22,11 +23,11 @@ export default async function ChatBoardPage() {
                     </div>
                 </TabsContent>
 
-                <TabsContent value="chat" className="flex-1 p-1">
+                <TabsContent value="chat" className="flex-1 p-2">
                     <Chat boards={boards} />
                 </TabsContent>
 
-                <TabsList className="grid w-full grid-cols-2 bg-black text-white z-10">
+                <TabsList className="grid w-full grid-cols-2 shadow-md text-black">
                     <TabsTrigger value="boards" className="flex items-center justify-center">
                         <svg className="w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                             <rect width="7" height="7" x="3" y="3" rx="1" />
@@ -44,6 +45,9 @@ export default async function ChatBoardPage() {
                     </TabsTrigger>
                 </TabsList>
             </Tabs>
+            <div className="fixed bottom-6 right-1 p-4">
+                <AddButtons />
+            </div>
         </div>
     )
 }
