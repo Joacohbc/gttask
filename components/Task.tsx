@@ -2,6 +2,8 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { TaskStatus, Task as TaskType } from "@/types/index"
+import { useState } from "react"
+import { useRouter } from "next/navigation"
 
 const statusColors = (status: TaskStatus) => {
     switch (status) {
@@ -30,6 +32,30 @@ const priorityColors = (priority: string) => {
 }
 
 export function Task({ id, title, description, status, priority }: TaskType) {
+    const router = useRouter()
+    const [isDeleting, setIsDeleting] = useState(false)
+
+    const handleDelete = async () => {
+        if (confirm("¿Estás seguro de que quieres eliminar esta tarea?")) {
+            setIsDeleting(true)
+            try {
+                const response = await fetch(`/api/tasks/${id}`, {
+                    method: 'DELETE',
+                })
+                
+                if (response.ok) {
+                    router.refresh()
+                } else {
+                    console.error('Error al eliminar la tarea')
+                }
+            } catch (error) {
+                console.error('Error de red:', error)
+            } finally {
+                setIsDeleting(false)
+            }
+        }
+    }
+
     return (
         <Card className="p-2 my-3 mx-1">
             <CardHeader className="flex flex-col justify-center items-start">
@@ -45,8 +71,16 @@ export function Task({ id, title, description, status, priority }: TaskType) {
                 </CardDescription>
             </CardContent>
             <CardFooter className="flex justify-end pt-2">
-                <Button variant="outline" size="sm">Edit</Button>
-                <Button variant="ghost" size="sm" className="ml-2">Delete</Button>
+                <Button variant="outline" size="sm" onClick={() => router.push(`/tasks/edit/${id}`)}>Edit</Button>
+                <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    className="ml-2"
+                    onClick={handleDelete}
+                    disabled={isDeleting}
+                >
+                    {isDeleting ? 'Eliminando...' : 'Delete'}
+                </Button>
             </CardFooter>
         </Card>
     )

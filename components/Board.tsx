@@ -1,27 +1,38 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+"use client"
+
 import { Task } from "./Task"
-import { Board as BoardType } from "@/types/index"
+import { Board as BoardType, Task as TaskType } from "@/types/index"
+import { Button } from "@/components/ui/button"
+import { Pencil1Icon } from "@radix-ui/react-icons"
+import { useRouter } from "next/navigation"
 
 export function Board({ id, title, tasks }: BoardType) {
+    const router = useRouter()
+    
     return (
-        <Card className="min-w-[300px] max-w-[350px]">
-            <CardHeader>
-                <CardTitle>{title}</CardTitle>
-            </CardHeader>
-            <CardContent>
-                {tasks.map((task) => (
-                    <Task
-                        key={task.id}
-                        id={task.id}
-                        title={task.title}
-                        description={task.description}
-                        status={task.status}
-                        priority={task.priority}
-                        createdAt={task.createdAt}
-                        updatedAt={task.updatedAt}
-                    />
-                ))}
-            </CardContent>
-        </Card>
+        <div className="w-[300px] rounded-lg border shadow-sm p-4 bg-background">
+            <div className="flex justify-between items-center mb-4">
+                <h3 className="text-lg font-semibold">{title}</h3>
+                <Button 
+                    variant="ghost" 
+                    size="icon" 
+                    onClick={() => router.push(`/boards/edit/${id}`)}
+                >
+                    <Pencil1Icon className="h-4 w-4" />
+                </Button>
+            </div>
+            
+            <div>
+                {tasks && tasks.length > 0 ? (
+                    tasks.map((task: TaskType) => (
+                        <Task key={task.id} {...task} />
+                    ))
+                ) : (
+                    <div className="text-center py-4 text-muted-foreground">
+                        No hay tareas en este tablero
+                    </div>
+                )}
+            </div>
+        </div>
     )
 }
