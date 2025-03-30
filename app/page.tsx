@@ -13,18 +13,20 @@ export default async function ChatBoardPage() {
         <div className="h-screen w-full flex flex-col">
             <Tabs defaultValue="boards" className="flex flex-col h-full">
 
-                <TabsContent value="boards" className="p-2">
-                    <Project
-                        title="Project Management App"
-                        boards={boards}
-                    />
+                <TabsContent value="boards" className="flex-1 p-1 overflow-hidden">
+                    <div className="h-full overflow-auto">
+                        <Project
+                            title="Project Management App"
+                            boards={boards}
+                        />
+                    </div>
                 </TabsContent>
 
-                <TabsContent value="chat" className="flex-1 p-2">
+                <TabsContent value="chat" className="flex-1 p-1">
                     <Chat boards={boards} />
                 </TabsContent>
 
-                <TabsList className="grid w-full grid-cols-2 bg-black text-white">
+                <TabsList className="grid w-full grid-cols-2 bg-black text-white z-10">
                     <TabsTrigger value="boards" className="flex items-center justify-center">
                         <svg className="w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                             <rect width="7" height="7" x="3" y="3" rx="1" />

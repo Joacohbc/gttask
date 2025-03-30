@@ -38,8 +38,6 @@ export function Project({ title, boards }: ProjectProps) {
                         </CarouselItem>
                     ))}
                 </CarouselContent>
-                {/* <CarouselPrevious className="left-2" />
-                <CarouselNext className="right-2" /> */}
             </Carousel>
             
             {/* <div className="flex flex-col justify-between items-center my-4">
