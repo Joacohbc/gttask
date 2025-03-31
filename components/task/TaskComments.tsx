@@ -1,7 +1,6 @@
 import { Comment } from "@/types";
 import { formatDate } from "@/lib/utils";
 import { MessageSquare } from "lucide-react";
-import { Separator } from "@/components/ui/separator";
 
 interface TaskCommentsProps {
     comments: Comment[];

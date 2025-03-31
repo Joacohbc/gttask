@@ -82,6 +82,7 @@ export async function DELETE(request: Request, { params }: { params: { id: strin
         })
         return NextResponse.json({ task })
     } catch (error) {
+        console.log("Error deleting task:", error);
         return NextResponse.json({ error: 'Error deleting task' }, { status: 500 })
     }
 }

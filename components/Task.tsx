@@ -1,6 +1,6 @@
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { ALL_TASK_STATUSES, TaskStatus, Task as TaskType } from "@/types/index"
+import { ALL_TASK_STATUSES, Board, TaskStatus, Task as TaskType } from "@/types/index"
 import React, { useState, useEffect, useRef } from "react"
 import { useRouter } from "next/navigation"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
@@ -9,11 +9,11 @@ import { ScrollArea } from "@/components/ui/scroll-area"
 import { getStatusColor, getStatusLabel, TaskStatusBadge } from "./task/TaskStatusBadge"
 import { TaskPriorityBadge } from "./task/TaskPriorityBadge"
 
-export function Task({ id, title, description, status, priority, boardId }: TaskType) {
+export function Task({ id, title, status, priority, boardId }: TaskType) {
     const router = useRouter()
     const [isDeleting, setIsDeleting] = useState(false)
     const [isMoving, setIsMoving] = useState(false)
-    const [boards, setBoards] = useState<any[]>([])
+    const [boards, setBoards] = useState<Board[]>([])
     const [isHolding, setIsHolding] = useState(false)
     const [isClicked, setIsClicked] = useState(false)
     const holdTimerRef = useRef<NodeJS.Timeout | null>(null)

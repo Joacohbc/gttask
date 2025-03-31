@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect, useRef } from "react"
-import { Check, PlusCircle, X } from "lucide-react"
+import { Check, PlusCircle } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command"
@@ -131,7 +131,7 @@ export function TagSelector({ tags, onTagsChange, existingTags = [] }: TagSelect
                                                         onClick={() => handleAddTag()}
                                                         className="flex-1"
                                                     >
-                                                        Create "{inputValue}"
+                                                        Create &ldquo;{inputValue}&ldquo;
                                                     </Button>
                                                 </div>
                                             </div>

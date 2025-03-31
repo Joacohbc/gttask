@@ -1,5 +1,5 @@
 import { TaskDetails } from "@/components/task/TaskDetails";
-import { Task, TaskStatus, TaskPriority } from "@/types";
+import { Task } from "@/types";
 import { notFound } from "next/navigation";
 
 // Esta es una función simulada para obtener una tarea por ID

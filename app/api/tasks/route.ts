@@ -11,6 +11,7 @@ export async function GET() {
         })
         return NextResponse.json({ boards })
     } catch (error) {
+        console.log(error)
         return NextResponse.json({ error: 'Error fetching tasks' }, { status: 500 })
     }
 }

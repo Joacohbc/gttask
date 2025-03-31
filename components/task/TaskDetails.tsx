@@ -1,5 +1,4 @@
 import { Task } from "@/types";
-import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Calendar, Clock } from "lucide-react";
 import { TagsList } from "./TagsList";

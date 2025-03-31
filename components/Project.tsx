@@ -2,7 +2,6 @@
 
 import { Board } from "./Board"
 import { Board as BoardType } from "@/types/index"
-import { useRouter } from "next/navigation"
 import { 
     Carousel,
     CarouselContent,

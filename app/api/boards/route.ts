@@ -11,6 +11,7 @@ export async function GET() {
     })
     return NextResponse.json({ boards })
   } catch (error) {
+    console.log(error)
     return NextResponse.json({ error: 'Error fetching boards' }, { status: 500 })
   }
 }
@@ -24,6 +25,7 @@ export async function POST(request: Request) {
     })
     return NextResponse.json({ board })
   } catch (error) {
+    console.log(error)
     return NextResponse.json({ error: 'Error creating board' }, { status: 500 })
   }
 }

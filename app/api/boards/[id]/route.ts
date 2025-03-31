@@ -17,6 +17,7 @@ export async function GET(request: Request, { params }: { params: { id: string }
         }
         return NextResponse.json({ board })
     } catch (error) {
+        console.log("Error fetching board:", error);
         return NextResponse.json({ error: 'Error fetching board' }, { status: 500 })
     }
 }
@@ -33,6 +34,7 @@ export async function PUT(request: Request, { params }: { params: { id: string }
         })
         return NextResponse.json({ board })
     } catch (error) {
+        console.log("Error updating board:", error);
         return NextResponse.json({ error: 'Error updating board' }, { status: 500 })
     }
 }
@@ -47,6 +49,7 @@ export async function DELETE(request: Request, { params }: { params: { id: strin
         })
         return NextResponse.json({ board })
     } catch (error) {
+        console.log("Error deleting board:", error);
         return NextResponse.json({ error: 'Error deleting board' }, { status: 500 })
     }
 }
